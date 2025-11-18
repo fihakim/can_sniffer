@@ -98,10 +98,10 @@ class SerialMonitor:
             # Get all items from queue without blocking
             while True:
                 line = self.serial_queue.get_nowait()
-                if "##VER:" in line:
+                if "##VER:" in line: # Looking for version number
                     try:
-                        version_number = line.split("##VERL")[1].strip()
-                        self.monitor.insert(tk.END, f"Firmware v{version_number}\n")
+                        version_number = line.split("##VER:")[1].strip() # Getting version number from arduino script
+                        self.monitor.insert(tk.END, f"Firmware v{version_number}\n") # Printing version number onto serial monitor
                     except IndexError:
                         self.monitor.insert(tk.END, line)
                 else:
