@@ -1,6 +1,7 @@
 #include <mcp_can.h>
 #include <SPI.h>
 
+#define FIRMWARE_VERSION "2.0"
 // Define CS pin for MCP2515
 const int SPI_CS_PIN = 9;
 // Define INT pin for MCP2515
