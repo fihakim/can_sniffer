@@ -16,7 +16,7 @@ class SerialMonitor:
     # Constructor method to initialise class
     def __init__(self, master):
         self.master = master
-        self.version = "v1.2"
+        self.version = "v1.4"
         # Setting title and window size
         self.master.title("Serial Monitor")
         self.master.geometry("850x400")
