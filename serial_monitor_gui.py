@@ -16,6 +16,7 @@ class SerialMonitor:
     # Constructor method to initialise class
     def __init__(self, master):
         self.master = master
+        self.version = "v1.2"
         # Setting title and window size
         self.master.title("Serial Monitor")
         self.master.geometry("850x400")
@@ -75,6 +76,7 @@ class SerialMonitor:
             self.ser = Serial(port, baud, timeout=1)
             # Clearing monitor for new messages
             self.monitor.delete(1.0, tk.END)
+            self.monitor.insert(tk.END, f"Software {self.version}\n")
             self.monitor.insert(tk.END, f"Connected to {port} at {baud} baud\n")
             self.connect_button["state"] = tk.DISABLED
             self.disconnect_button["state"] = tk.NORMAL
