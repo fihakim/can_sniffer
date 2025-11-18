@@ -15,6 +15,9 @@ unsigned char rxBuf[8];  // Buffer to store received data bytes
 
 void setup() {
   Serial.begin(115200);
+  delay(100);
+  Serial.print("##VER:");
+  Serial.println(FIRMWARE_VERSION);
   while (!Serial); // Wait for serial port to connect
   Serial.println("CAN Bus Sniffer Initialising...");
   // Initialise MCP2515 CAN controller, arguments: Speed (CAN_500KBPS), Crystal Frequency (MCP_16MHZ)

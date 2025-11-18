@@ -98,7 +98,14 @@ class SerialMonitor:
             # Get all items from queue without blocking
             while True:
                 line = self.serial_queue.get_nowait()
-                self.monitor.insert(tk.END, line)
+                if "##VER:" in line:
+                    try:
+                        version_number = line.split("##VERL")[1].strip()
+                        self.monitor.insert(tk.END, f"Firmware v{version_number}\n")
+                    except IndexError:
+                        self.monitor.insert(tk.END, line)
+                else:
+                    self.monitor.insert(tk.END, line)
                 self.monitor.see(tk.END)
         except queue.Empty:
             pass # Do nothing if queue is empty
