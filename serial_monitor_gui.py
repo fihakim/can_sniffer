@@ -139,7 +139,6 @@ class SerialMonitor:
             self.ser.close()
         self.connect_button["state"] = tk.NORMAL
         self.disconnect_button["state"] = tk.DISABLED
-        self.export_button["state"] = tk.DISABLED
         self.monitor.insert(tk.END, "Disconnected\n")
 
     # Method to read from the serial port in a separate thread
