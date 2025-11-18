@@ -1,6 +1,9 @@
 # can_sniffer
 CAN Sniffer developed using Arduino and interfaced with Python GUI
 
-To use, connect Arduino with CAN Sniffer script to vehicle/rig
+To use, connect Arduino Uno with Seed Studio CAN BUS SHIELD V2.0
+Upload can_sniffer.ino to Arduino
+Connect Arduino to vehicle/rig
 Run GUI and select COM port
-Click connect to read signals
+Click Connect to read signals
+Click Export to export as LOG file
