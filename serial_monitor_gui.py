@@ -100,10 +100,11 @@ class SerialMonitor:
         try:
             # Get all items from queue without blocking
             while True:
-                line = self.serial_queue.get_nowait()
+                item = self.serial_queue.get_nowait()
+                line, signal_time = item
                 if "##START" in line:
                     self.timestamping = True
-                    self.start_time = datetime.datetime.now() # Get current time
+                    self.start_time = signal_time # Get time of signal 
                     continue
                 if "##VER:" in line: # Looking for version number
                     try:
@@ -113,11 +114,11 @@ class SerialMonitor:
                         self.monitor.insert(tk.END, line)
                     continue
                 if self.timestamping and self.start_time:
-                    elapsed_time = datetime.datetime.now() - self.start_time # Get timestamp
+                    elapsed_time = signal_time - self.start_time # Get timestamp
                     # Maths for minutes seconds and milliseconds
                     mins = int(elapsed_time.total_seconds() // 60)
                     sec = int(elapsed_time.total_seconds() % 60)
-                    millis = int(elapsed_time.total_seconds() / 1000)
+                    millis = int(elapsed_time.microseconds / 1000)
                     time = f"{mins:02}:{sec:02}:{millis:03}" # Format timestamp correctly
                     self.monitor.insert(tk.END, f"[{time}] {line}") 
                 else:
@@ -148,7 +149,8 @@ class SerialMonitor:
                 line = self.ser.readline().decode("utf-8")
                 if line:
                     # Put data into queue instead of updating GUI directly
-                    self.serial_queue.put(line)
+                    current_time = datetime.datetime.now()
+                    self.serial_queue.put((line, current_time))
             except SerialException:
                 # Port was closed, break loop
                 break

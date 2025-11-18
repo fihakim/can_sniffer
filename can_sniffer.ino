@@ -27,7 +27,7 @@ void setup() {
   } else {
     Serial.println("Error Initialising MCP2515...");
     while (1); // Halt if initialisation fails
-  Serial.println("##START") // Tells python code to start timestamping
+  Serial.println("##START"); // Tells python code to start timestamping
   }
 
   // Set operation mode to normal to receive messages
