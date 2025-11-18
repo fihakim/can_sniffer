@@ -23,6 +23,8 @@ class SerialMonitor:
         # Queue for serial data
         self.serial_queue = queue.Queue()
         self.reading = False # Control flag for thread
+        self.timestamping = False # Control flag for timestamping
+        self.start_time = None
         # Call create_widgets method: sets up GUI components
         self.create_widgets()
         # Handle window close event
@@ -76,6 +78,7 @@ class SerialMonitor:
             self.ser = Serial(port, baud, timeout=1)
             # Clearing monitor for new messages
             self.monitor.delete(1.0, tk.END)
+            self.timestamping = False
             self.monitor.insert(tk.END, f"Software {self.version}\n")
             self.monitor.insert(tk.END, f"Connected to {port} at {baud} baud\n")
             self.connect_button["state"] = tk.DISABLED
@@ -98,14 +101,28 @@ class SerialMonitor:
             # Get all items from queue without blocking
             while True:
                 line = self.serial_queue.get_nowait()
+                if "##START" in line:
+                    self.timestamping = True
+                    self.start_time = datetime.datetime.now() # Get current time
+                    continue
                 if "##VER:" in line: # Looking for version number
                     try:
                         version_number = line.split("##VER:")[1].strip() # Getting version number from arduino script
                         self.monitor.insert(tk.END, f"Firmware v{version_number}\n") # Printing version number onto serial monitor
                     except IndexError:
                         self.monitor.insert(tk.END, line)
+                    continue
+                if self.timestamping and self.start_time:
+                    elapsed_time = datetime.datetime.now() - self.start_time # Get timestamp
+                    # Maths for minutes seconds and milliseconds
+                    mins = int(elapsed_time.total_seconds() // 60)
+                    sec = int(elapsed_time.total_seconds() % 60)
+                    millis = int(elapsed_time.total_seconds() / 1000)
+                    time = f"{mins:02}:{sec:02}:{millis:03}" # Format timestamp correctly
+                    self.monitor.insert(tk.END, f"[{time}] {line}") 
                 else:
                     self.monitor.insert(tk.END, line)
+
                 self.monitor.see(tk.END)
         except queue.Empty:
             pass # Do nothing if queue is empty
